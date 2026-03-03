@@ -71,9 +71,31 @@ def index():
 
 @app.route("/test")
 def test():
-    send_notification()
-    return "sent"
+    now = datetime.now(ZoneInfo("Asia/Tokyo"))
+    msg = f"{now.strftime('%H:%M')}の通知です"
+
+    r = requests.post(
+        "https://api.pushover.net/1/messages.json",
+        data={"token": APP_TOKEN, "user": USER_KEY, "message": msg},
+        timeout=10,
+    )
+
+    return {
+        "status": r.status_code,
+        "body": r.text,
+        "message": msg,
+    }
+
+@app.route("/debug")
+def debug():
+    # env の有無と enabled を可視化
+    return {
+        "enabled": is_enabled(),
+        "has_PUSHOVER_USER": bool(USER_KEY),
+        "has_PUSHOVER_TOKEN": bool(APP_TOKEN),
+    }
 
 if __name__ == "__main__":
     init_db()
     app.run(host="0.0.0.0", port=10000)
+
