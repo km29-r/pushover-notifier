@@ -94,6 +94,10 @@ def debug():
         "has_PUSHOVER_USER": bool(USER_KEY),
         "has_PUSHOVER_TOKEN": bool(APP_TOKEN),
     }
+    
+@app.route("/ping")
+def ping():
+    return "ok"
 
 if __name__ == "__main__":
     init_db()
