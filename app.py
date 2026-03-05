@@ -400,18 +400,24 @@ def stop() -> Response:
 
 @app.route("/mode/pomo")
 def mode_pomo() -> Response:
-    """Switch to Pomodoro mode."""
+    """Switch to Pomodoro mode and auto-start notifications."""
     require_key()
     set_mode("pomo")
-    return Response("mode=pomo", content_type="text/plain")
+    set_enabled(True)
+    resume_monitor()
+    send_notification(force=True)
+    return Response("mode=pomo (started)", content_type="text/plain")
 
 
 @app.route("/mode/quarter")
 def mode_quarter() -> Response:
-    """Switch to quarter-hour mode."""
+    """Switch to quarter-hour mode and auto-start notifications."""
     require_key()
     set_mode("quarter")
-    return Response("mode=quarter", content_type="text/plain")
+    set_enabled(True)
+    resume_monitor()
+    send_notification(force=True)
+    return Response("mode=quarter (started)", content_type="text/plain")
 
 
 @app.route("/status")
